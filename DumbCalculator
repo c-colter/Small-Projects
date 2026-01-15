@@ -1,0 +1,85 @@
+import enum
+import tkinter as tk
+from enum import Enum
+
+class LastButton(Enum):
+    NUMBER = 0
+    PLUS = 1
+    EQUALS = 2
+
+class DumbCalculator:
+    def __init__(self, root):
+        self.stored_operand = 0
+        self.last_button = None
+
+        frame = tk.Frame(master=root, bg="lightgrey")
+        frame.pack(fill=tk.BOTH, expand=True)
+        frame.rowconfigure(index=[0,1,2,3], weight=1)
+        frame.columnconfigure(index=[0,1], weight=1)
+
+        grid_customization = {"padx":2, "pady":2, "ipadx":0, "ipady":0, "sticky":"nsew"}
+
+        self.screen = tk.Label(master=frame, text="")
+        self.screen.grid(**grid_customization, row=0, column=0, columnspan=2)
+
+        self.btn_zero = tk.Button(master=frame, text="0", command=self.on_zero)
+        self.btn_zero.grid(**grid_customization, row=1, column=0)
+
+        self.btn_one = tk.Button(master=frame, text="1", command=self.on_one)
+        self.btn_one.grid(**grid_customization, row=1, column=1)
+
+        self.btn_two = tk.Button(master=frame,text="2", command=self.on_two)
+        self.btn_two.grid(**grid_customization, row=2, column=0)
+
+        self.btn_three = tk.Button(master=frame, text="3", command=self.on_three)
+        self.btn_three.grid(**grid_customization, row=2, column=1)
+
+        self.btn_plus = tk.Button(master=frame, text="+", command=self.on_plus)
+        self.btn_plus.grid(**grid_customization, row=3, column=0)
+
+        self.btn_equals = tk.Button(master=frame, text="=", command=self.on_equals)
+        self.btn_equals.grid(**grid_customization, row=3, column=1)
+
+    def on_zero(self):
+        if self.last_button == LastButton.EQUALS:
+            self.screen["text"] = ""
+        self.screen["text"] += "0"
+        self.last_button = LastButton.NUMBER
+
+    def on_one(self):
+        if self.last_button == LastButton.EQUALS:
+            self.screen["text"] = ""
+        self.screen["text"] += "1"
+        self.last_button = LastButton.NUMBER
+
+    def on_two(self):
+        if self.last_button == LastButton.EQUALS:
+            self.screen["text"] = ""
+        self.screen["text"] += "2"
+        self.last_button = LastButton.NUMBER
+
+    def on_three(self):
+        if self.last_button == LastButton.EQUALS:
+            self.screen["text"] = ""
+        self.screen["text"] += "3"
+        self.last_button = LastButton.NUMBER
+
+    def on_plus(self):
+        if self.last_button != LastButton.PLUS:
+            self.stored_operand = self.screen["text"]
+            self.screen["text"] = ""
+            self.last_button = LastButton.PLUS
+        else:
+            pass
+
+    def on_equals(self):
+        if self.last_button == LastButton.NUMBER:
+            self.screen["text"] = str(int(self.stored_operand) + int(self.screen["text"]))
+            self.last_button = LastButton.EQUALS
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    root.title("Dumb Calculator")
+    app = DumbCalculator(root)
+    root.mainloop()
